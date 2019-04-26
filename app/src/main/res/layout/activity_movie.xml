@@ -39,11 +39,24 @@
                     android:orientation="vertical">
 
                 <android.support.design.widget.TextInputEditText
-                        android:id="@+id/placemarkTitle"
+                        android:id="@+id/movieTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:hint="@string/hint_movieTitle"
+                        android:inputType="text"
+                        android:maxLength="25"
+                        android:maxLines="1"
+                        android:padding="8dp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="14sp"/>
+
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/movieDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:hint="@string/hint_movieDescription"
                         android:inputType="text"
                         android:maxLength="25"
                         android:maxLines="1"
