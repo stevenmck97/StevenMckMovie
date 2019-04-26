@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">StevenMck-Movie</string>
+    <string name="button_addMovie">Add Movie</string>
+    <string name="hint_movieTitle">Movie Title</string>
 </resources>
