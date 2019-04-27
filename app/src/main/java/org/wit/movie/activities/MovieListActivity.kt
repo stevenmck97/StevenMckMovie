@@ -3,16 +3,17 @@ package org.wit.movie.activities
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
 import kotlinx.android.synthetic.main.activity_movie_list.*
-import kotlinx.android.synthetic.main.card_movie.view.*
+import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivityForResult
+import org.wit.movie.MovieAdapter
+import org.wit.movie.MovieListener
 import org.wit.movie.R
 import org.wit.movie.main.MainApp
 import org.wit.movie.models.MovieModel
 
-class MovieListActivity : AppCompatActivity(){
+class MovieListActivity : AppCompatActivity(), MovieListener {
 
     lateinit var app: MainApp
 
@@ -24,7 +25,8 @@ class MovieListActivity : AppCompatActivity(){
         //layout and populate for display
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = MovieAdapter(app.movies)
+        recyclerView.adapter = MovieAdapter(app.movies.findAll(), this)
+
 
         //enable action bar and set title
         toolbarMain.title = title
@@ -36,13 +38,6 @@ class MovieListActivity : AppCompatActivity(){
         return super.onCreateOptionsMenu(menu)
     }
 
-//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-//        when (item?.itemId) {
-//        R.id.item_add -> startActivityForResult<MovieActivity>(0,0)
-//        }
-//        return super.onOptionsItemSelected(item)
-    //   }
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.item_add -> startActivityForResult<MovieActivity>(0)
@@ -50,27 +45,8 @@ class MovieListActivity : AppCompatActivity(){
         return super.onOptionsItemSelected(item)
     }
 
-}
-
-class MovieAdapter constructor(private var movies: List<MovieModel>) :
-    RecyclerView.Adapter<MovieAdapter.MainHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
-        return MainHolder(LayoutInflater.from(parent?.context).inflate(R.layout.card_movie, parent, false))
+    override fun onMovieClick(movie: MovieModel) {
+        startActivityForResult(intentFor<MovieActivity>().putExtra("movie_edit", movie), 0)
     }
 
-    override fun onBindViewHolder(holder: MainHolder, position: Int) {
-        val movie = movies[holder.adapterPosition]
-        holder.bind(movie)
-    }
-
-    override fun getItemCount(): Int = movies.size
-
-    class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        fun bind(movie: MovieModel) {
-            itemView.movieTitle.text = movie.title
-            itemView.description.text = movie.description
-        }
-    }
 }
