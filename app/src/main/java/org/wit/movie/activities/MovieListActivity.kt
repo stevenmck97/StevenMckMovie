@@ -1,5 +1,6 @@
 package org.wit.movie.activities
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -47,6 +48,12 @@ class MovieListActivity : AppCompatActivity(), MovieListener {
 
     override fun onMovieClick(movie: MovieModel) {
         startActivityForResult(intentFor<MovieActivity>().putExtra("movie_edit", movie), 0)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        //recyclerView is a widget in activity_movie_list.xml
+        recyclerView.adapter?.notifyDataSetChanged()
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }

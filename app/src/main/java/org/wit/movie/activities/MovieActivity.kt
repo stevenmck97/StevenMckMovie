@@ -1,5 +1,6 @@
 package org.wit.movie.activities
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -14,11 +15,16 @@ import org.jetbrains.anko.toast
 import org.wit.movie.R
 import org.wit.movie.main.MainApp
 import org.wit.movie.models.MovieModel
+import org.wit.movie.org.wit.movie.helpers.readImage
+import org.wit.movie.org.wit.movie.helpers.readImageFromPath
+import org.wit.movie.org.wit.movie.helpers.showImagePicker
 
 class MovieActivity : AppCompatActivity(), AnkoLogger {
 
     var movie = MovieModel()
     lateinit var app: MainApp
+    var edit = false
+    val IMAGE_REQUEST = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,29 +33,44 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
 
         if (intent.hasExtra("movie_edit"))
         {
+            edit = true
             movie = intent.extras.getParcelable<MovieModel>("movie_edit")
             movieTitle.setText(movie.title)
             movieDescription.setText(movie.description)
+            btnAdd.setText(R.string.save_movie)
+            movieImage.setImageBitmap(readImageFromPath(this, movie.image))
         }
 
         btnAdd.setOnClickListener() {
             movie.title = movieTitle.text.toString()
             movie.description = movieDescription.text.toString()
-            if (movie.title.isNotEmpty()) {
-                app.movies.create(movie.copy())
-                info("Add Button Pressed. name: ${movie.title}")
-                setResult(AppCompatActivity.RESULT_OK)
-                finish()
+            if (movie.title.isEmpty()) {
+                toast(R.string.enter_movie_title)
+            } else {
+                if (edit) {
+                    app.movies.update(movie.copy())
+                } else {
+                    app.movies.create(movie.copy())
+                }
             }
-            else {
-                toast ("Please enter a title")
-            }
+            info("add Button Pressed: $movieTitle")
+            setResult(AppCompatActivity.RESULT_OK)
+            finish()
         }
 
         //Add action bar and set title
         toolbarAdd.title = title
         setSupportActionBar(toolbarAdd)
+
+        chooseImage.setOnClickListener {
+            info ("Select image")
+        }
+
+        chooseImage.setOnClickListener {
+            showImagePicker(this, IMAGE_REQUEST)
+        }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_movie, menu)
@@ -62,5 +83,17 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
             R.id.item_cancel-> finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            IMAGE_REQUEST -> {
+                if (data != null) {
+                    movie.image = data.getData().toString()
+                    movieImage.setImageBitmap(readImage(this, resultCode, data))
+                }
+            }
+        }
     }
 }
