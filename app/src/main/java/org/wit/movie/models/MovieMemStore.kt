@@ -28,9 +28,11 @@ class MovieMemStore : MovieStore, AnkoLogger {
         if (foundMovie != null) {
             foundMovie.title = movie.title
             foundMovie.description = movie.description
-            logAll()
+            foundMovie.image = movie.image
+            logAll();
         }
     }
+
 
     fun logAll() {
         movies.forEach { info("${it}") }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.card_movie.view.*
 import org.wit.movie.R
 import org.wit.movie.models.MovieModel
+import org.wit.movie.org.wit.movie.helpers.readImageFromPath
 
 interface MovieListener {
     fun onMovieClick(movie: MovieModel)
@@ -29,9 +30,11 @@ class MovieAdapter constructor(private var movies: List<MovieModel>,
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(movie: MovieModel,  listener : MovieListener) {
-            itemView.movieTitleList.text= movie.title
+            itemView.movieTitleList.text = movie.title
             itemView.movieDescriptionList.text = movie.description
+            itemView.imageViewList.setImageBitmap(readImageFromPath(itemView.context, movie.image))
             itemView.setOnClickListener { listener.onMovieClick(movie) }
         }
+        }
     }
-}
+

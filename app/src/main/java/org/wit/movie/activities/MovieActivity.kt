@@ -8,12 +8,10 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_movie.*
 import kotlinx.android.synthetic.main.activity_movie_list.*
 import kotlinx.android.synthetic.main.card_movie.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.startActivityForResult
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
 import org.wit.movie.R
 import org.wit.movie.main.MainApp
+import org.wit.movie.models.Location
 import org.wit.movie.models.MovieModel
 import org.wit.movie.org.wit.movie.helpers.readImage
 import org.wit.movie.org.wit.movie.helpers.readImageFromPath
@@ -25,6 +23,8 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
     lateinit var app: MainApp
     var edit = false
     val IMAGE_REQUEST = 1
+    val LOCATION_REQUEST = 2
+    var location = Location(52.245696, -7.139102, 15f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +39,9 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
             movieDescription.setText(movie.description)
             btnAdd.setText(R.string.save_movie)
             movieImage.setImageBitmap(readImageFromPath(this, movie.image))
+            if (movie.image != null) {
+                chooseImage.setText(R.string.change_movie_image)
+            }
         }
 
         btnAdd.setOnClickListener() {
@@ -69,6 +72,14 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
         chooseImage.setOnClickListener {
             showImagePicker(this, IMAGE_REQUEST)
         }
+
+        movieLocation.setOnClickListener {
+            info ("Set Location Pressed")
+        }
+
+        movieLocation.setOnClickListener {
+            startActivityForResult(intentFor<MapsActivity>().putExtra("location", location), LOCATION_REQUEST)
+        }
     }
 
 
@@ -92,6 +103,12 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
                 if (data != null) {
                     movie.image = data.getData().toString()
                     movieImage.setImageBitmap(readImage(this, resultCode, data))
+                    chooseImage.setText(R.string.change_movie_image)
+                }
+            }
+            LOCATION_REQUEST -> {
+                if (data != null) {
+                    location = data.extras.getParcelable<Location>("location")
                 }
             }
         }
