@@ -66,16 +66,14 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
         toolbarAdd.title = title
         setSupportActionBar(toolbarAdd)
 
-        chooseImage.setOnClickListener {
-            info ("Select image")
-        }
+
 
         chooseImage.setOnClickListener {
             showImagePicker(this, IMAGE_REQUEST)
         }
 
 
-        movieLocation.setOnClickListener {
+       /* movieLocation.setOnClickListener {
             val location = Location(52.245696, -7.139102, 15f)
             if (movie.zoom != 0f) {
                 location.lat =  movie.lat
@@ -84,6 +82,8 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
             }
             startActivityForResult(intentFor<MapsActivity>().putExtra("location", location), LOCATION_REQUEST)
         }
+        */
+
     }
 
 
