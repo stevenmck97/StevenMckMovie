@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import org.wit.movie.R
 import org.wit.movie.models.Location
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback,  GoogleMap.OnMarkerDragListener {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback,  GoogleMap.OnMarkerDragListener, GoogleMap.OnMarkerClickListener {
 
     private lateinit var map: GoogleMap
     var location = Location()
@@ -29,6 +29,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,  GoogleMap.OnMarke
         mapFragment.getMapAsync(this)
     }
 
+    override fun onMarkerClick(marker: Marker): Boolean {
+        val loc = LatLng(location.lat, location.lng)
+        marker.setSnippet("GPS : " + loc.toString())
+        return false
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         val loc = LatLng(location.lat, location.lng)
@@ -40,6 +46,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,  GoogleMap.OnMarke
         map.addMarker(options)
         map.setOnMarkerDragListener(this)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, location.zoom))
+        map.setOnMarkerClickListener(this)
     }
 
     override fun onMarkerDragStart(marker: Marker) {
@@ -53,7 +60,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,  GoogleMap.OnMarke
         location.lng = marker.position.longitude
         location.zoom = map.cameraPosition.zoom
     }
-    
+
 
     override fun onBackPressed() {
         val resultIntent = Intent()

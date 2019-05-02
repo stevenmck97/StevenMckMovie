@@ -3,19 +3,17 @@ package org.wit.movie.main
 import android.app.Application
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import org.wit.movie.models.MovieJSONStore
 import org.wit.movie.models.MovieMemStore
-import org.wit.movie.models.MovieModel
+import org.wit.movie.models.MovieStore
 
-class MainApp: Application(), AnkoLogger {
+class MainApp : Application(), AnkoLogger {
 
-    //val movies = ArrayList<MovieModel>()
-    val movies = MovieMemStore()
+    lateinit var movies: MovieStore
 
     override fun onCreate() {
         super.onCreate()
-        info("Movie Started")
-        //movies.add(MovieModel("One", "About one..."))
-        //movies.add(MovieModel("Two", "About two..."))
-        //movies.add(MovieModel("Three", "About three..."))
+        movies = MovieJSONStore(applicationContext)
+        info("Movie started")
     }
 }

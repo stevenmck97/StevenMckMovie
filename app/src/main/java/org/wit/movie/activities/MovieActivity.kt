@@ -24,7 +24,8 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
     var edit = false
     val IMAGE_REQUEST = 1
     val LOCATION_REQUEST = 2
-    var location = Location(52.245696, -7.139102, 15f)
+
+    //var location = Location(52.245696, -7.139102, 15f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,11 +74,14 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
             showImagePicker(this, IMAGE_REQUEST)
         }
 
-        movieLocation.setOnClickListener {
-            info ("Set Location Pressed")
-        }
 
         movieLocation.setOnClickListener {
+            val location = Location(52.245696, -7.139102, 15f)
+            if (movie.zoom != 0f) {
+                location.lat =  movie.lat
+                location.lng = movie.lng
+                location.zoom = movie.zoom
+            }
             startActivityForResult(intentFor<MapsActivity>().putExtra("location", location), LOCATION_REQUEST)
         }
     }
@@ -85,13 +89,20 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_movie, menu)
+        if (edit && menu != null) menu.getItem(0).setVisible(true)
         return super.onCreateOptionsMenu(menu)
     }
 
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.item_cancel-> finish()
+            R.id.item_delete -> {
+                app.movies.delete(movie)
+                finish()
+            }
+            R.id.item_cancel -> {
+                finish()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -108,7 +119,10 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
             }
             LOCATION_REQUEST -> {
                 if (data != null) {
-                    location = data.extras.getParcelable<Location>("location")
+                    val location = data.extras.getParcelable<Location>("location")
+                    movie.lat = location.lat
+                    movie.lng = location.lng
+                    movie.zoom = location.zoom
                 }
             }
         }

@@ -9,7 +9,7 @@ internal fun getId(): Long {
     return lastId++
 }
 
-class MovieMemStore : MovieStore, AnkoLogger {
+abstract class MovieMemStore : MovieStore, AnkoLogger {
 
     val movies = ArrayList<MovieModel>()
 
@@ -23,12 +23,15 @@ class MovieMemStore : MovieStore, AnkoLogger {
         logAll()
     }
 
-    override fun update(movie: MovieModel) {
+   override fun update(movie: MovieModel) {
         var foundMovie: MovieModel? = movies.find { p -> p.id == movie.id }
         if (foundMovie != null) {
             foundMovie.title = movie.title
             foundMovie.description = movie.description
             foundMovie.image = movie.image
+            foundMovie.lat = movie.lat
+            foundMovie.lng = movie.lng
+            foundMovie.zoom = movie.zoom
             logAll();
         }
     }

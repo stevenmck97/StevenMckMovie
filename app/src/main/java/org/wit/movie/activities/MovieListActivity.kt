@@ -25,9 +25,8 @@ class MovieListActivity : AppCompatActivity(), MovieListener {
 
         //layout and populate for display
         val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = MovieAdapter(app.movies.findAll(), this)
-
+        recyclerView.layoutManager = layoutManager   //recyclerView is a widget in activity_movie_list.xml
+        loadMovies()
 
         //enable action bar and set title
         toolbarMain.title = title
@@ -51,9 +50,17 @@ class MovieListActivity : AppCompatActivity(), MovieListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        //recyclerView is a widget in activity_movie_list.xml
-        recyclerView.adapter?.notifyDataSetChanged()
+        loadMovies()
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun loadMovies() {
+        showMovies(app.movies.findAll())
+    }
+
+    fun showMovies (movies: List<MovieModel>) {
+        recyclerView.adapter = MovieAdapter(movies, this)
+        recyclerView.adapter?.notifyDataSetChanged()
     }
 
 }
