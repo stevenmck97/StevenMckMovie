@@ -10,12 +10,13 @@
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:background="#3a3a3a">
 
         <ImageView
                 android:id="@+id/imageViewList"
                 android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_height="94dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="16dp"/>
